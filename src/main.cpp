@@ -11,6 +11,75 @@
 #include "vector"
 
 using namespace vex;
+Tetrimino tetriminoPool[7] = 
+{
+  //T piece
+  Tetrimino( new Mino[4]
+  {
+    Mino(0, 0, color::purple),
+    Mino(-sclFactor, 0, color::purple),
+    Mino(sclFactor, 0, color::purple),
+    Mino(0, sclFactor, color::purple),
+  }),
+
+  //I piece
+  Tetrimino( new Mino[4]
+  {
+    Mino(-sclFactor/2, 0, color(50, 50, 255)),
+    Mino(sclFactor/2, 0, color(50, 50, 255)),
+    Mino(-sclFactor-sclFactor/2, 0, color(50, 50, 255)),
+    Mino(sclFactor+sclFactor/2, 0, color(50, 50, 255)),
+  }),
+
+  //L Piece
+  Tetrimino( new Mino[4] 
+  {
+    Mino(0, 0, color::orange),
+    Mino(-sclFactor, 0, color::orange),
+    Mino(sclFactor, 0, color::orange),
+    Mino(sclFactor, sclFactor, color::orange),
+  }),
+
+  //J Piece
+  Tetrimino( new Mino[4] 
+  {
+    Mino(0, 0, color::blue),
+    Mino(sclFactor, 0, color::blue),
+    Mino(sclFactor, 0, color::blue),
+    Mino(-sclFactor, sclFactor, color::blue),
+  }),
+
+  // S Piece
+  Tetrimino( new Mino[4] 
+  {
+    Mino(0, 0, color::green),
+    Mino(-sclFactor, 0, color::green),
+    Mino(sclFactor, sclFactor, color::green),
+    Mino(0, sclFactor, color::green),
+  }),
+
+  // Z Piece
+  Tetrimino( new Mino[4] 
+  {
+    Mino(0, 0, color::red),
+    Mino(sclFactor, 0, color::red),
+    Mino(-sclFactor, -sclFactor, color::red),
+    Mino(0, sclFactor, color::red),
+  }),
+
+  // O Piece
+  Tetrimino( new Mino[4]  
+  {
+    Mino(sclFactor/2, sclFactor/2, color::yellow),
+    Mino(-sclFactor/2, sclFactor/2, color::yellow),
+    Mino(-sclFactor/2, -sclFactor/2, color::yellow),
+    Mino(sclFactor/2, -sclFactor/2, color::yellow),
+  }),
+};
+
+Tetrimino mainPiece = tetriminoPool[0];
+bool aWasPressed = false;
+bool xWasPressed = false;
 
 void displayTetrisBg() //480 by 242
 { //10 by 20 board
@@ -35,6 +104,14 @@ int controllerUpdate()
 {
   while(10) 
   {
+    if(Controller.ButtonA.pressing() && !aWasPressed) {
+      aWasPressed = true;
+      mainPiece.rotateBlock(true);
+    } else if(!Controller.ButtonA.pressing()) aWasPressed = false;
+    if(Controller.ButtonX.pressing() && !xWasPressed) {
+      xWasPressed = true;
+      mainPiece.rotateBlock(false);
+    } else if(!Controller.ButtonX.pressing()) xWasPressed = false;
     task::sleep(20);
   }
 }
@@ -42,7 +119,7 @@ int controllerUpdate()
 int main() {
     //test.setColor(purple);
     displayTetrisBg();
-    //test.displayMino();
+    mainPiece.spawn(240, 0);
     task t(gameUpdate);
     task k(controllerUpdate);  
   }
