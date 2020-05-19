@@ -27,5 +27,6 @@ extern vex::controller Controller;
 extern int sclFactor;
 
 extern void makeTetrimino();
+//extern void checkForLine();
 
 #endif
